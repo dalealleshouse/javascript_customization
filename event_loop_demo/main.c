@@ -84,6 +84,8 @@ static JSValue js_setTimeout(JSContext *ctx, JSValueConst this_val, int argc,
   g_timers[g_timerCount] = newTimer;
   g_timerCount++;
 
+  printf("[C] New timer added, there are %zu total timers\n", g_timerCount);
+
   // Return undefined (we aren't returning a timer ID in this example)
   return JS_UNDEFINED;
 }
@@ -111,11 +113,12 @@ static void runEventLoop(void) {
         // Remove timer from array
         // Replace with last item for O(1) removal
         g_timerCount--;
-        printf("[C] There are %zu timers left\n", g_timerCount);
         if (g_timerCount > 0 && i < g_timerCount) {
           g_timers[i] = g_timers[g_timerCount];
         }
         g_timers = realloc(g_timers, sizeof(TimerItem) * g_timerCount);
+
+        printf("[C] Timer removed, there are %zu timers left\n", g_timerCount);
       } else {
         i++;
       }
