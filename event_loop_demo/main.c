@@ -1,4 +1,6 @@
 #include "../../quickjs/quickjs.h"
+#include "../common/console.h"
+#include "../common/script_reader.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -86,22 +88,6 @@ static JSValue js_setTimeout(JSContext *ctx, JSValueConst this_val, int argc,
   return JS_UNDEFINED;
 }
 
-// For convenience, let's also define a very simple console.log:
-static JSValue js_console_log(JSContext *ctx, JSValueConst this_val, int argc,
-                              JSValueConst *argv) {
-  for (int i = 0; i < argc; i++) {
-    if (i > 0)
-      printf(" ");
-    const char *str = JS_ToCString(ctx, argv[i]);
-    if (str) {
-      printf("%s", str);
-      JS_FreeCString(ctx, str);
-    }
-  }
-  printf("\n");
-  return JS_UNDEFINED;
-}
-
 // ---------- The Event Loop ----------
 
 static void runEventLoop(void) {
@@ -139,7 +125,7 @@ static void runEventLoop(void) {
   }
 }
 
-int main(void) {
+int main(int argc, char **argv) {
   // 1. Create QuickJS runtime
   JSRuntime *rt = JS_NewRuntime();
   JSContext *ctx = JS_NewContext(rt);
@@ -158,13 +144,17 @@ int main(void) {
   JS_FreeValue(ctx, globalObj);
 
   // 4. Let's run some sample JS to schedule timeouts
-  const char *script = R"(
-        console.log("Scheduling 3 timeouts...");
-        setTimeout(1000, () => console.log("Fired after 1s"));
-        setTimeout(2000, () => console.log("Fired after 2s"));
-        setTimeout(5000, () => console.log("Fired after 5s"));
-        console.log("All timers scheduled!");
-    )";
+  const char *filename = NULL;
+  if (argc > 1) {
+    filename = argv[1];
+  }
+
+  char *script = read_entire_input(filename);
+  if (!script) {
+    JS_FreeContext(ctx);
+    JS_FreeRuntime(rt);
+    return 1;
+  }
 
   // Evaluate the script
   JSValue val =
