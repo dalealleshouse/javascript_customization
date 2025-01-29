@@ -1,57 +1,14 @@
 #include "../../quickjs/quickjs.h"
 #include "../common/console.h"
 #include "../common/script_reader.h"
-#include <stdbool.h>
-#include <stdio.h>
+#include "timer.h"
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
-#include <unistd.h> // for usleep
-
-// ---------- Timer Data Structures ----------
-
-typedef struct {
-  // When should this timer fire?
-  struct timespec deadline;
-
-  // The callback function stored as a JSValue
-  JSValue callback;
-
-  // We need the context to call the function
-  JSContext *ctx;
-} TimerItem;
+#include <unistd.h>
 
 // We'll keep a simple dynamically allocated array of timers
 static TimerItem *g_timers = NULL;
 static size_t g_timerCount = 0;
-
-// ---------- Utility: Current Time + Compare ----------
-
-static struct timespec now_timespec(void) {
-  struct timespec ts;
-  clock_gettime(CLOCK_MONOTONIC, &ts);
-  return ts;
-}
-
-// Return true if 'a' >= 'b' in timespec
-static bool timespec_ge(const struct timespec *a, const struct timespec *b) {
-  if (a->tv_sec > b->tv_sec)
-    return true;
-  if (a->tv_sec < b->tv_sec)
-    return false;
-  // same seconds, compare nanoseconds
-  return (a->tv_nsec >= b->tv_nsec);
-}
-
-// Add milliseconds to timespec
-static void timespec_add_ms(struct timespec *ts, int ms) {
-  ts->tv_sec += ms / 1000;
-  ts->tv_nsec += (ms % 1000) * 1000000L;
-  if (ts->tv_nsec >= 1000000000L) {
-    ts->tv_sec += 1;
-    ts->tv_nsec -= 1000000000L;
-  }
-}
 
 // ---------- The setTimeout Implementation ----------
 
