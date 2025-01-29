@@ -1,6 +1,6 @@
 #include "../../quickjs/quickjs.h"
-#include "console.h"
-#include "script_reader.h"
+#include "../common/console.h"
+#include "../common/script_reader.h"
 #include <stdio.h>
 #include <string.h>
 
