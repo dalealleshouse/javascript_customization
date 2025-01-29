@@ -3,9 +3,10 @@
 
 JSValue js_console_log(JSContext *ctx, JSValueConst this_val, int argc,
                        JSValueConst *argv) {
-  // Print all arguments separated by spaces
-
+  // Print suffix to indicate this is a JS log
   printf("%s", "[JS] ");
+
+  // Print all arguments separated by spaces
   for (int i = 0; i < argc; i++) {
     if (i > 0) {
       printf(" ");
