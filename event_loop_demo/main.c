@@ -15,8 +15,9 @@ static size_t g_timerCount = 0;
 static JSValue js_setTimeout(JSContext *ctx, JSValueConst this_val, int argc,
                              JSValueConst *argv) {
   if (argc < 2) {
-    return JS_UNDEFINED; // need delay + callback
+    return JS_UNDEFINED;
   }
+
   // 1) The delay in milliseconds
   int64_t delay = 0;
   JS_ToInt64(ctx, &delay, argv[0]);
@@ -43,7 +44,6 @@ static JSValue js_setTimeout(JSContext *ctx, JSValueConst this_val, int argc,
 
   printf("[C] New timer added, there are %zu total timers\n", g_timerCount);
 
-  // Return undefined (we aren't returning a timer ID in this example)
   return JS_UNDEFINED;
 }
 
