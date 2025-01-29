@@ -22,4 +22,11 @@ JavaScript engines work.
 
    ```bash
    cd ~/src/javascript_customization/engine_demo/
+   ./build.sh
+   ```
+
+1. Run the Code
+
+   ```bash
+   ./vibe_time
    ```
