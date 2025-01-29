@@ -111,6 +111,7 @@ static void runEventLoop(void) {
         // Remove timer from array
         // Replace with last item for O(1) removal
         g_timerCount--;
+        printf("[C] There are %zu timers left\n", g_timerCount);
         if (g_timerCount > 0 && i < g_timerCount) {
           g_timers[i] = g_timers[g_timerCount];
         }
