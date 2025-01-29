@@ -11,7 +11,7 @@ JavaScript engines work.
    git clone https://github.com/bellard/quickjs.git
    ```
 
-1. Building QuickJS
+1. Build QuickJS
 
    ```bash
    cd ~/src/quickjs
