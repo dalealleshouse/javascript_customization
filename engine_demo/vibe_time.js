@@ -1,4 +1,4 @@
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 3; i++) {
   let result = vibetime();
-  console.log(result);
+  console.log("[JS]", result);
 }

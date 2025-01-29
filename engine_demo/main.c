@@ -11,7 +11,7 @@ static JSValue js_vibetime(JSContext *ctx, JSValueConst this_val, int argc,
 
   // You can return a string, number, object, etc.
   // Here, let's return a simple string:
-  return JS_NewString(ctx, "[JS] Vibetime is the right time!");
+  return JS_NewString(ctx, "Vibetime is the right time!");
 }
 
 int main(int argc, char **argv) {
