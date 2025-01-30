@@ -7,7 +7,11 @@ workings of JavaScript engines.
 
 > **⚠️ Warning:**  
 > This project is intended **solely for demonstration purposes** and does
-> **not** constitute production-ready code. ...
+> **not** constitute production-ready code. It **does not** incorporate best
+> practices, testing, comprehensive error handling, security measures, or
+> performance optimizations required for deploying in a live environment. Use
+> this code at your own risk and ensure thorough testing and necessary
+> modifications before considering it for any production use.
 
 ## Build and Run the Demos
 
