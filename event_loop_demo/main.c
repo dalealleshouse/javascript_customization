@@ -47,38 +47,46 @@ static JSValue js_setTimeout(JSContext *ctx, JSValueConst this_val, int argc,
   return JS_UNDEFINED;
 }
 
+static void processTimers() {
+  struct timespec now = now_timespec();
+  size_t i = 0;
+
+  // We'll check all timers for expiration
+  while (i < g_timerCount) {
+    TimerItem *t = &g_timers[i];
+
+    if (timespec_ge(&now, &t->deadline)) {
+      // Timer is expired, call the JS function
+      // We'll call with no arguments
+      JSValue ret = JS_Call(t->ctx, t->callback, JS_UNDEFINED, 0, NULL);
+      JS_FreeValue(t->ctx, ret);
+
+      // Free the callback reference
+      JS_FreeValue(t->ctx, t->callback);
+
+      // Remove timer from array
+      // Replace with last item for O(1) removal
+      g_timerCount--;
+      if (g_timerCount > 0 && i < g_timerCount) {
+        g_timers[i] = g_timers[g_timerCount];
+      }
+      g_timers = realloc(g_timers, sizeof(TimerItem) * g_timerCount);
+
+      printf("[C] Timer removed, there are %zu timers left\n", g_timerCount);
+    } else {
+      i++;
+    }
+  }
+}
+
 // ---------- The Event Loop ----------
 
-static void runEventLoop(void) {
+static void runEventLoop(JSRuntime *rt, JSContext *ctx) {
   while (true) {
-    struct timespec now = now_timespec();
+    processTimers();
 
-    // We'll check all timers for expiration
-    size_t i = 0;
-    while (i < g_timerCount) {
-      TimerItem *t = &g_timers[i];
-
-      if (timespec_ge(&now, &t->deadline)) {
-        // Timer is expired, call the JS function
-        // We'll call with no arguments
-        JSValue ret = JS_Call(t->ctx, t->callback, JS_UNDEFINED, 0, NULL);
-        JS_FreeValue(t->ctx, ret);
-
-        // Free the callback reference
-        JS_FreeValue(t->ctx, t->callback);
-
-        // Remove timer from array
-        // Replace with last item for O(1) removal
-        g_timerCount--;
-        if (g_timerCount > 0 && i < g_timerCount) {
-          g_timers[i] = g_timers[g_timerCount];
-        }
-        g_timers = realloc(g_timers, sizeof(TimerItem) * g_timerCount);
-
-        printf("[C] Timer removed, there are %zu timers left\n", g_timerCount);
-      } else {
-        i++;
-      }
+    while (JS_ExecutePendingJob(rt, &ctx) > 0) {
+      // Continue executing until no jobs remain
     }
 
     // Sleep briefly to avoid 100% CPU usage
@@ -132,7 +140,7 @@ int main(int argc, char **argv) {
 
   // 5. Start the event loop
   // This never exits in this demo
-  runEventLoop();
+  runEventLoop(rt, ctx);
 
   // We'll never reach here in this sample
   JS_FreeContext(ctx);
