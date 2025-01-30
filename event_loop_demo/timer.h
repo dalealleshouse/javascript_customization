@@ -2,6 +2,7 @@
 #include "../../quickjs/quickjs.h"
 #include <stdbool.h>
 #include <stdlib.h>
+#include <time.h>
 
 typedef struct {
   // When should this timer fire?

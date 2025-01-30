@@ -1,7 +1,9 @@
-# Quick JS
+# JavaScript Customization Demos
 
-This demo uses [QuickJS](https://bellard.org/quickjs/) to demonstrate how
-JavaScript engines work.
+This demo uses [QuickJS](https://bellard.org/quickjs/) to demonstrate the inner
+workings of JavaScript engines.
+
+## Build and Run the Demos
 
 1. Get the source
 
@@ -18,8 +20,18 @@ JavaScript engines work.
    make
    ```
 
-1. Build the Demo
+1. Build and run the engine demo
 
    ```bash
    cd ~/src/javascript_customization/engine_demo/
+   ./build.sh
+   ./vibe_time ./vibe_time.js
+   ```
+
+1. Build and run the event loop demo
+
+   ```bash
+   cd ~/src/javascript_customization/event_loop_demo/
+   ./build.sh
+   ./vibe_loop ./vibe_loop.js
    ```
