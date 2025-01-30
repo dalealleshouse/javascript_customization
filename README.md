@@ -3,6 +3,12 @@
 This demo uses [QuickJS](https://bellard.org/quickjs/) to demonstrate the inner
 workings of JavaScript engines.
 
+## Disclaimer
+
+> **⚠️ Warning:**  
+> This project is intended **solely for demonstration purposes** and does
+> **not** constitute production-ready code. ...
+
 ## Build and Run the Demos
 
 1. Get the source
