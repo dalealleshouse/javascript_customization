@@ -1,5 +1,5 @@
-hoist();
+call_before_declaration();
 
-function hoist() {
+function call_before_declaration() {
   console.log("I've been hoisted"); // undefined
 }
