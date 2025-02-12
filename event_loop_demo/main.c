@@ -47,6 +47,8 @@ static JSValue js_setTimeout(JSContext *ctx, JSValueConst this_val, int argc,
   return JS_UNDEFINED;
 }
 
+// ---------- Check each timer and execute callbacks ----------
+
 static void processTimers() {
   struct timespec now = now_timespec();
   size_t i = 0;
@@ -112,7 +114,7 @@ int main(int argc, char **argv) {
 
   JS_FreeValue(ctx, globalObj);
 
-  // 4. Let's run some sample JS to schedule timeouts
+  // 4. Read JS code from stdin
   const char *filename = NULL;
   if (argc > 1) {
     filename = argv[1];
