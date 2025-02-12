@@ -20,15 +20,15 @@ static JSValue js_setTimeout(JSContext *ctx, JSValueConst this_val, int argc,
 
   // 1) The delay in milliseconds
   int64_t delay = 0;
-  JS_ToInt64(ctx, &delay, argv[0]);
+  JS_ToInt64(ctx, &delay, argv[1]);
 
   // 2) The callback function
-  if (!JS_IsFunction(ctx, argv[1])) {
+  if (!JS_IsFunction(ctx, argv[0])) {
     return JS_UNDEFINED;
   }
 
   // Duplicate the function so it stays valid
-  JSValue func = JS_DupValue(ctx, argv[1]);
+  JSValue func = JS_DupValue(ctx, argv[0]);
 
   // 3) Construct a TimerItem
   TimerItem newTimer;

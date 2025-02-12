@@ -1,12 +1,8 @@
-// JS code (script to eval):
 console.log("Starting promises...");
 
-function wait(ms) {
-  return new Promise((resolve) => {
-    setTimeout(ms, () => {
-      resolve("Waited " + ms + " ms");
-    });
-  });
+async function wait(ms) {
+  await new Promise((resolve) => setTimeout(resolve, ms));
+  return `Waited ${ms} ms`;
 }
 
 async function test() {
@@ -15,5 +11,8 @@ async function test() {
   console.log("All done!");
 }
 
-test();
+(async () => {
+  await test();
+})();
+
 console.log("test() started...");
