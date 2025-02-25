@@ -7,8 +7,8 @@
 #include <unistd.h>
 
 // We'll keep a simple dynamically allocated array of timers
-static TimerItem *g_timers = NULL;
-static size_t g_timerCount = 0;
+static TimerItem *g_macrotasks = NULL;
+static size_t g_taskCount = 0;
 
 // ---------- The setTimeout Implementation ----------
 
@@ -38,11 +38,11 @@ static JSValue js_setTimeout(JSContext *ctx, JSValueConst this_val, int argc,
   timespec_add_ms(&newTimer.deadline, delay);
 
   // 4) Insert into global array
-  g_timers = realloc(g_timers, sizeof(TimerItem) * (g_timerCount + 1));
-  g_timers[g_timerCount] = newTimer;
-  g_timerCount++;
+  g_macrotasks = realloc(g_macrotasks, sizeof(TimerItem) * (g_taskCount + 1));
+  g_macrotasks[g_taskCount] = newTimer;
+  g_taskCount++;
 
-  printf("[C] New timer added, there are %zu total timers\n", g_timerCount);
+  printf("[C] New timer added, there are %zu total timers\n", g_taskCount);
 
   return JS_UNDEFINED;
 }
@@ -54,8 +54,8 @@ static void processTimers() {
   size_t i = 0;
 
   // We'll check all timers for expiration
-  while (i < g_timerCount) {
-    TimerItem *t = &g_timers[i];
+  while (i < g_taskCount) {
+    TimerItem *t = &g_macrotasks[i];
 
     if (timespec_ge(&now, &t->deadline)) {
       // Timer is expired, call the JS function
@@ -68,13 +68,13 @@ static void processTimers() {
 
       // Remove timer from array
       // Replace with last item for O(1) removal
-      g_timerCount--;
-      if (g_timerCount > 0 && i < g_timerCount) {
-        g_timers[i] = g_timers[g_timerCount];
+      g_taskCount--;
+      if (g_taskCount > 0 && i < g_taskCount) {
+        g_macrotasks[i] = g_macrotasks[g_taskCount];
       }
-      g_timers = realloc(g_timers, sizeof(TimerItem) * g_timerCount);
+      g_macrotasks = realloc(g_macrotasks, sizeof(TimerItem) * g_taskCount);
 
-      printf("[C] Timer removed, there are %zu timers left\n", g_timerCount);
+      printf("[C] Timer removed, there are %zu timers left\n", g_taskCount);
     } else {
       i++;
     }
