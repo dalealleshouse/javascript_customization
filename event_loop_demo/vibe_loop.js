@@ -1,6 +1,13 @@
-console.log("Scheduling 2 timeouts...");
+function actualElapsedTime(scheduleTime, expected) {
+  return function () {
+    const endTime = Date.now();
+    const elapsed = endTime - scheduleTime;
+    console.log(`Expected delay: ${expected} ms`);
+    console.log(`Actual delay: ${elapsed} ms`);
+  };
+}
 
-setTimeout(() => console.log("Fired after 2s"), 2000);
-setTimeout(() => console.log("Fired after 1s"), 1000);
+setTimeout(actualElapsedTime(Date.now(), 2000), 2000);
+setTimeout(actualElapsedTime(Date.now(), 1000), 1000);
 
 console.log("All timers scheduled!");
