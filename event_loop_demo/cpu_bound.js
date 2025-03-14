@@ -10,7 +10,7 @@ function actualElapsedTime(scheduleTime, expected) {
 setTimeout(actualElapsedTime(Date.now(), 1000), 1000);
 setTimeout(actualElapsedTime(Date.now(), 2000), 2000);
 
-sumOfSquareRoots(100_000_000);
+// sumOfSquareRoots(100_000_000);
 
 // ~ 2 second runtime
 function sumOfSquareRoots(iterations) {
