@@ -1,16 +1,16 @@
-function actualElapsedTime(scheduleTime, expected) {
+function actualElapsedTime(scheduleTime, expected, resolve) {
   return function () {
     const endTime = Date.now();
     const elapsed = endTime - scheduleTime;
     console.log(`Expected delay: ${expected} ms`);
     console.log(`Actual delay: ${elapsed} ms`);
+    resolve();
   };
 }
 
 async function wait(ms) {
   await new Promise((resolve) => {
-    setTimeout(actualElapsedTime(Date.now(), ms), ms);
-    resolve();
+    setTimeout(actualElapsedTime(Date.now(), ms, resolve), ms);
   });
 }
 
